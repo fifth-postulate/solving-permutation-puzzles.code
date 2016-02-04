@@ -50,5 +50,31 @@ public class GraphTest {
     public void shouldNotFindVerticesNotAdded() {
         graph.findVertex(A_VERTEX_LABEL);
     }
+
+    @Test
+    public void shouldAddEdgesBetweenVertices() {
+        graph.addVertex(A_VERTEX_LABEL);
+        graph.addVertex(OTHER_VERTEX_LABEL);
+
+        graph.addEdge(A_VERTEX_LABEL, OTHER_VERTEX_LABEL);
+
+        assertThat(graph.edges(), hasSize(1));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotAddEdgesBetweenUnknownVertices() {
+        graph.addEdge(A_VERTEX_LABEL, OTHER_VERTEX_LABEL);
+    }
+
+    @Test
+    public void shouldFindEdgeByLabels() {
+        graph.addVertex(A_VERTEX_LABEL);
+        graph.addVertex(OTHER_VERTEX_LABEL);
+        Edge e = graph.addEdge(A_VERTEX_LABEL, OTHER_VERTEX_LABEL);
+
+        assertThat(graph.hasEdge(A_VERTEX_LABEL, OTHER_VERTEX_LABEL), is(true));
+        assertThat(graph.findEdge(A_VERTEX_LABEL, OTHER_VERTEX_LABEL), is(equalTo(e)));
+
+    }
 }
 
