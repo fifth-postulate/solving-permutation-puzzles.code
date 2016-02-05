@@ -3,10 +3,6 @@ package nl.fifth.postulate.graphs;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import static nl.fifth.postulate.matchers.SizeMatcher.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -40,7 +36,7 @@ public class GraphTest {
 
     @Test
     public void shouldFindVerticesByLabel() {
-        Vertex v = graph.addVertex(A_VERTEX_LABEL);
+        Graph.Vertex v = graph.addVertex(A_VERTEX_LABEL);
 
         assertThat(graph.hasVertex(A_VERTEX_LABEL), is(true));
         assertThat(graph.findVertex(A_VERTEX_LABEL), is(equalTo(v)));

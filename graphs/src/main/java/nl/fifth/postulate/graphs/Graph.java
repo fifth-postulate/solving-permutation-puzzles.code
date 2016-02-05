@@ -66,5 +66,37 @@ public class Graph {
         }
         return new Edge(new Vertex(from), new Vertex(to));
     }
+
+    public class Vertex {
+        private final String label;
+
+        public Vertex(String label) {
+            this.label = label;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Vertex vertex = (Vertex) o;
+
+            return label.equals(vertex.label);
+        }
+
+        @Override
+        public int hashCode() {
+            return label.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s", label);
+        }
+
+        public Set<Vertex> neighbours() {
+            return Collections.unmodifiableSet(neighbours.get(this));
+        }
+    }
 }
 

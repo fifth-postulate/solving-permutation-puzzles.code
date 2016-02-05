@@ -1,10 +1,10 @@
 package nl.fifth.postulate.graphs;
 
 public class Edge {
-    private final Vertex from;
-    private final Vertex to;
+    private final Graph.Vertex from;
+    private final Graph.Vertex to;
 
-    public Edge(Vertex from, Vertex to) {
+    public Edge(Graph.Vertex from, Graph.Vertex to) {
         this.from = from;
         this.to = to;
     }
