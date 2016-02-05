@@ -27,4 +27,9 @@ public class Edge {
         result = 31 * result + to.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s -> %s", from, to);
+    }
 }
