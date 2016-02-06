@@ -11,15 +11,15 @@ public class Dijkstra {
         this.graph = graph;
     }
 
-    public Integer shortestPath(String fromLabel, String toLabel) {
+    public Path shortestPath(String fromLabel, String toLabel) {
         Graph.Vertex from = graph.findVertex(fromLabel);
         Graph.Vertex to = graph.findVertex(toLabel);
 
-        Map<Graph.Vertex, Integer> knownDistances = new HashMap<Graph.Vertex, Integer>();
+        Map<Graph.Vertex, Path> knownPaths = new HashMap<Graph.Vertex, Path>();
         for (Graph.Vertex vertex: graph.vertices()) {
-            knownDistances.put(vertex, Integer.MAX_VALUE);
+            knownPaths.put(vertex, PathConstants.UNREACHABLE);
         }
-        knownDistances.put(from, 0);
+        knownPaths.put(from, new Start(from));
 
         Queue<Graph.Vertex> toVisit = new LinkedList<Graph.Vertex>();
         Set<Graph.Vertex> visited = new HashSet<Graph.Vertex>();
@@ -28,8 +28,8 @@ public class Dijkstra {
             Graph.Vertex vertex = toVisit.poll();
 
             for (Graph.Vertex neighbour: vertex.neighbours()) {
-                if ((knownDistances.get(vertex) + 1) < knownDistances.get(neighbour)) {
-                    knownDistances.put(neighbour, knownDistances.get(vertex) + 1);
+                if ((knownPaths.get(vertex).distance() + 1) < knownPaths.get(neighbour).distance()) {
+                    knownPaths.put(neighbour, new Step(knownPaths.get(vertex), neighbour));
                 }
 
                 if (!visited.contains(neighbour)) {
@@ -38,6 +38,61 @@ public class Dijkstra {
             }
         }
 
-        return knownDistances.get(to);
+        return knownPaths.get(to);
+    }
+}
+
+class Start implements Path {
+    private final Graph.Vertex vertex;
+
+    public Start(Graph.Vertex vertex) {
+        this.vertex = vertex;
+    }
+
+    @Override
+    public int distance() {
+        return 0;
+    }
+
+    @Override
+    public List<Graph.Vertex> vertices() {
+        return Arrays.asList(vertex);
+    }
+}
+
+class Step implements Path {
+    private final Path before;
+    private final Graph.Vertex vertex;
+
+    public Step(Path before, Graph.Vertex vertex) {
+        this.before = before;
+        this.vertex = vertex;
+    }
+
+    @Override
+    public int distance() {
+        return before.distance() + 1;
+    }
+
+    @Override
+    public List<Graph.Vertex> vertices() {
+        List<Graph.Vertex> vertices = new ArrayList<Graph.Vertex>();
+        vertices.addAll(before.vertices());
+        vertices.add(vertex);
+        return vertices;
+    }
+}
+
+enum PathConstants implements Path {
+    UNREACHABLE {
+        @Override
+        public int distance() {
+            return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public List<Graph.Vertex> vertices() {
+            throw new IllegalStateException("destination is unreachable");
+        }
     }
 }
