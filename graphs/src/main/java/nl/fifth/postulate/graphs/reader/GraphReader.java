@@ -18,7 +18,9 @@ public class GraphReader {
         List<String> lines = new ArrayList<String>();
         try {
             for (String line; (line = reader.readLine()) != null;) {
-                lines.add(line);
+                if (!line.isEmpty()) {
+                    lines.add(line);
+                }
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
