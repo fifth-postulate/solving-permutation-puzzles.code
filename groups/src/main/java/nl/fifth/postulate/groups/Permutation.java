@@ -1,9 +1,6 @@
 package nl.fifth.postulate.groups;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Permutation {
@@ -41,6 +38,16 @@ public class Permutation {
         return new Permutation(inverseImage);
     }
 
+    public Collection<Integer> fix() {
+        Collection<Integer> fixedElements = new ArrayList<Integer>();
+        for (int element = 0; element < image.size(); element++) {
+            if (image.get(element) == element) {
+                fixedElements.add(element);
+            }
+        }
+        return fixedElements;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,4 +63,5 @@ public class Permutation {
     public int hashCode() {
         return image.hashCode();
     }
+
 }
