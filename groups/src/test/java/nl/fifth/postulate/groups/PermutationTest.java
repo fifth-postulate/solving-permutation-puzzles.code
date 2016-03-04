@@ -46,5 +46,14 @@ public class PermutationTest {
 
         assertThat(fixedElements, contains(0, 2, 4));
     }
+
+    @Test
+    public void shouldActOnInteger() {
+        Permutation p = new Permutation(1, 2, 3, 4, 5, 6, 7, 0);
+
+        Integer image = p.actOn(0);
+
+        assertThat(image, is(1));
+    }
 }
 

@@ -48,6 +48,10 @@ public class Permutation {
         return fixedElements;
     }
 
+    public Integer actOn(int element) {
+        return image.get(element);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
