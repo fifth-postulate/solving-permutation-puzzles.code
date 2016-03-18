@@ -41,8 +41,8 @@ public class Permutation {
         return new Permutation(inverseImage);
     }
 
-    public Collection<Integer> fix() {
-        Collection<Integer> fixedElements = new ArrayList<Integer>();
+    public Set<Integer> fix() {
+        Set<Integer> fixedElements = new HashSet<>();
         for (int element = 0; element < image.size(); element++) {
             if (image.get(element) == element) {
                 fixedElements.add(element);
