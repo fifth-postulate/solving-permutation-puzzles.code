@@ -4,6 +4,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Permutation {
+    public static Permutation permutation(Integer... image) {
+        return new Permutation(image);
+    }
 
     private final List<Integer> image;
 
