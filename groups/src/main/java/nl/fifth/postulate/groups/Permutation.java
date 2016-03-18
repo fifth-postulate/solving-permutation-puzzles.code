@@ -55,6 +55,10 @@ public class Permutation {
         return image.get(element);
     }
 
+    public Integer gsetSize() {
+        return image.size();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
