@@ -40,6 +40,20 @@ public class Group {
         }
         return size;
     }
+
+    public boolean isMember(Permutation candidate) {
+        for (BaseStrongGeneratorLevel level: levels) {
+            if (level.hasTransversalFor(candidate)) {
+                candidate = candidate.times(level.transversalFor(candidate).inverse());
+            } else {
+                return false;
+            }
+        }
+        if (candidate.isIdentity()) {
+            return true;
+        }
+        return false;
+    }
 }
 
 
@@ -88,5 +102,13 @@ class BaseStrongGeneratorLevel {
 
     public Set<Integer> orbit() {
         return transversals.keySet();
+    }
+
+    public boolean hasTransversalFor(Permutation permutation) {
+        return transversals.containsKey(permutation.actOn(base));
+    }
+
+    public Permutation transversalFor(Permutation permutation) {
+        return transversals.get(permutation.actOn(base));
     }
 }
