@@ -3,7 +3,7 @@ package nl.fifth.postulate.groups;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Permutation implements GroupElement<Permutation> {
+public class Permutation implements GroupElement<Permutation>, GroupAction {
     public static Permutation permutation(Integer... image) {
         return new Permutation(image);
     }
@@ -54,10 +54,12 @@ public class Permutation implements GroupElement<Permutation> {
         return fixedElements;
     }
 
-    public Integer actOn(int element) {
+    @Override
+    public Integer actOn(Integer element) {
         return image.get(element);
     }
 
+    @Override
     public Integer degree() {
         return image.size();
     }
