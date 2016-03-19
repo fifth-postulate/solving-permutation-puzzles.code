@@ -3,7 +3,7 @@ package nl.fifth.postulate.groups;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Permutation {
+public class Permutation implements GroupElement<Permutation> {
     public static Permutation permutation(Integer... image) {
         return new Permutation(image);
     }
@@ -18,11 +18,13 @@ public class Permutation {
         this.image = image;
     }
 
+    @Override
     public Permutation times(Permutation multiplicand) {
         return new Permutation(image.stream().map(element -> multiplicand.image.get(element)).collect(Collectors.toList()));
     }
 
 
+    @Override
     public boolean isIdentity() {
         for (int index = 0; index < image.size(); index++) {
             if (image.get(index) != index) {
@@ -32,6 +34,7 @@ public class Permutation {
         return true;
     }
 
+    @Override
     public Permutation inverse() {
         List<Integer> inverseImage = new ArrayList<Integer>();
         inverseImage.addAll(image);
