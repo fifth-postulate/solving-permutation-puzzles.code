@@ -18,8 +18,8 @@ public class Permutation {
         this.image = image;
     }
 
-    public Permutation times(Permutation multiplicant) {
-        return new Permutation(image.stream().map(element -> multiplicant.image.get(element)).collect(Collectors.toList()));
+    public Permutation times(Permutation multiplicand) {
+        return new Permutation(image.stream().map(element -> multiplicand.image.get(element)).collect(Collectors.toList()));
     }
 
 
