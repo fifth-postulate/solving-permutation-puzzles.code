@@ -2,9 +2,6 @@ package nl.fifth.postulate.groups;
 
 import org.junit.Test;
 
-import java.util.Collection;
-
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
@@ -36,15 +33,6 @@ public class PermutationTest {
         Permutation product = p.times(p.inverse());
 
         assertThat(product.isIdentity(), is(true));
-    }
-
-    @Test
-    public void shouldReturnTheFixedElements() {
-        Permutation p = new Permutation(0, 3, 2, 1, 4, 6, 5);
-
-        Collection<Integer> fixedElements = p.fix();
-
-        assertThat(fixedElements, contains(0, 2, 4));
     }
 
     @Test

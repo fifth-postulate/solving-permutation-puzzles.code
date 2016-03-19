@@ -44,16 +44,6 @@ public class Permutation implements GroupElement<Permutation>, GroupAction {
         return new Permutation(inverseImage);
     }
 
-    public Set<Integer> fix() {
-        Set<Integer> fixedElements = new HashSet<>();
-        for (int element = 0; element < image.size(); element++) {
-            if (image.get(element) == element) {
-                fixedElements.add(element);
-            }
-        }
-        return fixedElements;
-    }
-
     @Override
     public Integer actOn(Integer element) {
         return image.get(element);
