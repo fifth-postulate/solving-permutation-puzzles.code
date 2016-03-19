@@ -21,7 +21,7 @@ public class Group {
 
     private Integer findBase(List<Integer> bases, List<Permutation> generators) {
         Integer base = null;
-        candidateLoop: for (int candidate = 0; candidate < generators.get(0).gsetSize(); candidate++) {
+        candidateLoop: for (int candidate = 0; candidate < generators.get(0).degree(); candidate++) {
             for (Permutation generator: generators) {
                 if (generator.actOn(candidate) != candidate) {
                     base = candidate;

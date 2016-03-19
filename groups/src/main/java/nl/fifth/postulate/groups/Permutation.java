@@ -55,7 +55,7 @@ public class Permutation {
         return image.get(element);
     }
 
-    public Integer gsetSize() {
+    public Integer degree() {
         return image.size();
     }
 
