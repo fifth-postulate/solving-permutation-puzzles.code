@@ -70,4 +70,43 @@ public class Permutation implements GroupElement<Permutation>, GroupAction {
         return image.hashCode();
     }
 
+    @Override
+    public String toString() {
+        if (isIdentity()) {
+            return "Id";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (List<Integer> cycle: cycles()) {
+            builder.append("(");
+            builder.append(String.join(" ", cycle.stream().map(x -> x.toString()).collect(Collectors.toList())));
+            builder.append(")");
+        }
+        return builder.toString();
+    }
+
+    private List<List<Integer>> cycles() {
+        List<List<Integer>> cycles = new ArrayList<List<Integer>>();
+        Set<Integer> visited = new HashSet<Integer>();
+        for (Integer index = 0; index < degree(); index++) {
+            if (!visited.contains(index)) {
+                List<Integer> cycle = new ArrayList<Integer>();
+                cycle.add(index);
+                Integer next = index;
+                do {
+                    next = actOn(next);
+                    if (next.equals(index)) {
+                        break;
+                    }
+                    cycle.add(next);
+                    visited.add(next);
+                } while(true);
+                if (cycle.size() != 1) {
+                    cycles.add(cycle);
+                }
+            }
+            visited.add(index);
+        }
+        return cycles;
+    }
+
 }
