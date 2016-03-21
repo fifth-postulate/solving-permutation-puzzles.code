@@ -30,7 +30,7 @@ public class Group {
             bases.add(base);
             BaseStrongGeneratorLevel level = new BaseStrongGeneratorLevel(base, generators);
             levels.add(level);
-            generators = level.fixGenerators();
+            generators = level.stabilizers();
         }
     }
 
@@ -74,7 +74,7 @@ public class Group {
 
 class BaseStrongGeneratorLevel {
     private final Map<Integer, Permutation> transversals  = new HashMap<Integer, Permutation>();
-    private final List<Permutation> fixGenerators = new ArrayList<Permutation>();
+    private final List<Permutation> stabilizers = new ArrayList<Permutation>();
     private final Integer base;
     private final List<Permutation> generators;
 
@@ -96,9 +96,9 @@ class BaseStrongGeneratorLevel {
                     transversals.put(image, transversal);
                     toVisit.add(image);
                 } else {
-                    Permutation fixGenerator = transversals.get(element).times(generator).times(transversals.get(image).inverse());
-                    if (!fixGenerator.isIdentity()) {
-                        fixGenerators.add(fixGenerator);
+                    Permutation stabilizer = transversals.get(element).times(generator).times(transversals.get(image).inverse());
+                    if (!stabilizer.isIdentity()) {
+                        stabilizers.add(stabilizer);
                     }
                 }
             }
@@ -111,8 +111,8 @@ class BaseStrongGeneratorLevel {
         return anyGenerator.times(anyGenerator.inverse());
     }
 
-    public List<Permutation> fixGenerators() {
-        return Collections.unmodifiableList(fixGenerators);
+    public List<Permutation> stabilizers() {
+        return Collections.unmodifiableList(stabilizers);
     }
 
     public Set<Integer> orbit() {
