@@ -1,8 +1,23 @@
 package nl.fifth.postulate.groups;
 
+import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Group {
+    public static Group generatedBy(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        List<Permutation> generators = new ArrayList<Permutation>();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            List<String> strings = Arrays.asList(line.split("\\s*,\\s*"));
+            List<Integer> images = strings.stream().map(x -> Integer.valueOf(x)).collect(Collectors.toList());
+            Permutation generator = new Permutation(images);
+            generators.add(generator);
+        }
+        return new Group(generators);
+    }
+
     public static Group generatedBy(Permutation... generators) {
         return new Group(Arrays.asList(generators));
     }

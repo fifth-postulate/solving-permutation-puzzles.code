@@ -2,6 +2,10 @@ package nl.fifth.postulate.groups;
 
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static nl.fifth.postulate.groups.Permutation.permutation;
@@ -27,6 +31,15 @@ public class GroupTest {
 
         assertTrue(group.isMember(member));
         assertFalse(group.isMember(nonMember));
+    }
 
+    @Test
+    public void shouldBeCreatedFromAFile() throws IOException {
+        Group group = Group.generatedBy(new File("src/test/resources/D10.group"));
+        Permutation member = permutation(4, 3, 2, 1, 0);
+        Permutation nonMember = permutation(1, 0, 2, 3, 4);
+
+        assertTrue(group.isMember(member));
+        assertFalse(group.isMember(nonMember));
     }
 }
