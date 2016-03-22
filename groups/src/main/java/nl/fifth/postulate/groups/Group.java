@@ -69,6 +69,14 @@ public class Group {
         }
         return false;
     }
+
+    public Permutation randomElement(Random random) {
+        Permutation product = levels.get(0).identity();
+        for (BaseStrongGeneratorLevel level: levels) {
+            product = product.times(level.randomElement(random));
+        }
+        return product;
+    }
 }
 
 
@@ -106,7 +114,7 @@ class BaseStrongGeneratorLevel {
         }
     }
 
-    private Permutation identity() {
+    protected Permutation identity() {
         Permutation anyGenerator = generators.get(0);
         return anyGenerator.times(anyGenerator.inverse());
     }
@@ -125,5 +133,11 @@ class BaseStrongGeneratorLevel {
 
     public Permutation transversalFor(Permutation permutation) {
         return transversals.get(permutation.actOn(base));
+    }
+
+    public Permutation randomElement(Random random) {
+        List<Integer> orbit = new ArrayList<Integer>(this.orbit());
+        Integer randomOrbitElement = orbit.get(random.nextInt(orbit.size()));
+        return transversals.get(randomOrbitElement);
     }
 }
