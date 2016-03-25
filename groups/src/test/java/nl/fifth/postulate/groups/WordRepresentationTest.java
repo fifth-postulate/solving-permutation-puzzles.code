@@ -11,24 +11,24 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(Parameterized.class)
-public class SLPRepresentationTest {
+public class WordRepresentationTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data(){
+        Word u = Word.generator("u");
+        Word v = Word.generator("v");
+
         Collection<Object[]> data = new ArrayList<>();
-        data.add(new Object[]{ SLP.identity(), "Id"});
-        data.add(new Object[]{ SLP.generator("a"), "a"});
-        data.add(new Object[]{ SLP.generator("b"), "b"});
-        data.add(new Object[]{ SLP.inverse(SLP.generator("a")), "a^-1"});
-        data.add(new Object[]{ SLP.product(SLP.generator("a"), SLP.generator("b")), "ab"});
-        data.add(new Object[]{ SLP.product(SLP.generator("a"), SLP.generator("a")), "a^2"});
-        data.add(new Object[]{ SLP.product(SLP.generator("a"), SLP.inverse(SLP.generator("a"))), "Id"});
+        data.add(new Object[]{ u, "u"});
+        data.add(new Object[]{ u.times(u), "u^2"});
+        data.add(new Object[]{ u.times(v), "uv"});
+        data.add(new Object[]{ u.times(u.inverse()), "Id"});
         return data;
     }
 
-    private final SLP element;
+    private final Word element;
     private final String expectedResult;
 
-    public SLPRepresentationTest(SLP element, String expectedResult) {
+    public WordRepresentationTest(Word element, String expectedResult) {
         this.element = element;
         this.expectedResult = expectedResult;
     }
