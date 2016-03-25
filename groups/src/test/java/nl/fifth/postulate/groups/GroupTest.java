@@ -1,5 +1,6 @@
 package nl.fifth.postulate.groups;
 
+import nl.fifth.postulate.groups.special.PermutationWord;
 import org.junit.Test;
 
 import java.io.File;
@@ -41,5 +42,17 @@ public class GroupTest {
 
         assertTrue(group.isMember(member));
         assertFalse(group.isMember(nonMember));
+    }
+
+    @Test
+    public void shouldWorkOnCompoundGroupElements() {
+        Group<PermutationWord> group = Group.generatedBy(
+                new PermutationWord(permutation(1, 2, 3, 4, 0), Word.generator("a")),
+                new PermutationWord(permutation(0, 4, 3, 2, 1), Word.generator("b"))
+        );
+        PermutationWord member = new PermutationWord(permutation(4, 3, 2, 1, 0), Word.identity());
+
+        assertTrue(group.isMember(member));
+        assertThat(group.strip(member).word.inverse().toString(), is("ab"));
     }
 }
