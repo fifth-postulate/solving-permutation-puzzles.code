@@ -16,7 +16,7 @@ public class GroupTest {
 
     @Test
     public void shouldDetermineSize() {
-        Group group = Group.generatedBy(permutation(1, 2, 3, 4, 0), permutation(0, 4, 3, 2, 1));
+        Group<Permutation> group = Group.generatedBy(permutation(1, 2, 3, 4, 0), permutation(0, 4, 3, 2, 1));
 
         Integer size = group.size();
 
@@ -25,7 +25,7 @@ public class GroupTest {
 
     @Test
     public void shouldDeterrmineMembership() {
-        Group group = Group.generatedBy(permutation(1, 2, 3, 4, 0), permutation(0, 4, 3, 2, 1));
+        Group<Permutation> group = Group.generatedBy(permutation(1, 2, 3, 4, 0), permutation(0, 4, 3, 2, 1));
         Permutation member = permutation(4, 3, 2, 1, 0);
         Permutation nonMember = permutation(1, 0, 2, 3, 4);
 
@@ -35,7 +35,7 @@ public class GroupTest {
 
     @Test
     public void shouldBeCreatedFromAFile() throws IOException {
-        Group group = Group.generatedBy(new File("src/test/resources/D10.group"));
+        Group<Permutation> group = Group.generatedBy(new File("src/test/resources/D10.group"));
         Permutation member = permutation(4, 3, 2, 1, 0);
         Permutation nonMember = permutation(1, 0, 2, 3, 4);
 

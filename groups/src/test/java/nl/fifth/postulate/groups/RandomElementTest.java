@@ -10,7 +10,7 @@ import static nl.fifth.postulate.groups.Permutation.permutation;
 public class RandomElementTest {
     @Test
     public void shouldCreateARandomElement() {
-        Group group = Group.generatedBy(permutation(1, 2, 3, 4, 5, 0));
+        Group<Permutation> group = Group.generatedBy(permutation(1, 2, 3, 4, 5, 0));
 
         Permutation permutation = group.randomElement(new Random());
 
