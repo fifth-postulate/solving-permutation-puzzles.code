@@ -67,10 +67,7 @@ public class Group<T extends GroupElement<T> & GroupAction> {
                 return false;
             }
         }
-        if (candidate.isIdentity()) {
-            return true;
-        }
-        return false;
+        return candidate.isIdentity();
     }
 
     public T randomElement(Random random) {
