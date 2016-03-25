@@ -1,6 +1,9 @@
 package nl.fifth.postulate.groups;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class SLP implements GroupElement<SLP> {
     public static SLP identity() {
@@ -36,7 +39,36 @@ public abstract class SLP implements GroupElement<SLP> {
     @Override
     public boolean isIdentity() { return false; }
 
-    private static class Identity extends SLP {
+    @Override
+    public String toString() {
+        RepresentationVisitor visitor = new RepresentationVisitor();
+        this.visit(visitor);
+        return visitor.toString();
+    }
+
+
+    public void visit(Visitor visitor) {
+        if (this instanceof Identity) {
+            visitor.visit((Identity) this);
+        } else if (this instanceof Generator) {
+            visitor.visit((Generator) this);
+        } else if (this instanceof Inverse) {
+            visitor.visit((Inverse) this);
+        } else if (this instanceof Product) {
+            visitor.visit((Product) this);
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    public interface Visitor {
+        void visit(Identity identity);
+        void visit(Generator generator);
+        void visit(Inverse inverse);
+        void visit(Product product);
+    }
+
+    protected static class Identity extends SLP {
 
         @Override
         public boolean equals(Object o) {
@@ -58,8 +90,8 @@ public abstract class SLP implements GroupElement<SLP> {
         }
     }
 
-    private static class Generator extends SLP {
-        private final String symbol;
+    protected static class Generator extends SLP {
+        public final String symbol;
 
         public Generator(String symbol) {
             this.symbol = symbol;
@@ -87,9 +119,9 @@ public abstract class SLP implements GroupElement<SLP> {
         }
     }
 
-    private static class Product extends SLP {
-        private final SLP left;
-        private final SLP right;
+    protected static class Product extends SLP {
+        protected final SLP left;
+        protected final SLP right;
 
         public Product(SLP left, SLP right) {
             this.left = left;
@@ -116,7 +148,7 @@ public abstract class SLP implements GroupElement<SLP> {
         }
     }
 
-    private static class Inverse extends SLP {
+    protected static class Inverse extends SLP {
 
         protected final SLP element;
 
@@ -145,4 +177,92 @@ public abstract class SLP implements GroupElement<SLP> {
             return element.hashCode();
         }
     }
+}
+
+class RepresentationVisitor implements SLP.Visitor {
+    private static class SLPElementPair {
+        public String generator;
+        public int power;
+
+        public SLPElementPair(String generator, int power) {
+            this.generator = generator;
+            this.power = power;
+        }
+
+        public SLPElementPair invert() {
+            return new SLPElementPair(generator, -power);
+        }
+
+        public void collect(SLPElementPair pair) {
+            this.power += pair.power;
+        }
+    }
+
+    private List<SLPElementPair> pairs = new ArrayList<SLPElementPair>();
+
+    @Override
+    public void visit(SLP.Identity identity) {
+        /* do nothing */
+    }
+
+    @Override
+    public void visit(SLP.Generator generator) {
+        pairs.add(new SLPElementPair(generator.symbol, 1));
+
+    }
+
+    @Override
+    public void visit(SLP.Inverse inverse) {
+        RepresentationVisitor subVisitor = new RepresentationVisitor();
+        inverse.element.visit(subVisitor);
+        List<SLPElementPair> subPairs = subVisitor.pairs;
+        Collections.reverse(subPairs);
+        pairs.addAll(subPairs.stream().map(pair -> pair.invert()).collect(Collectors.toList()));
+    }
+
+    @Override
+    public void visit(SLP.Product product) {
+        product.left.visit(this);
+        product.right.visit(this);
+    }
+
+    private List<SLPElementPair> normalize() {
+        if (pairs.size() <= 1) { return pairs; }
+        List<SLPElementPair> normalized = new ArrayList<SLPElementPair>();
+        SLPElementPair current = pairs.get(0);
+        for (int index = 1; index < pairs.size(); index++) {
+            SLPElementPair pair = pairs.get(index);
+            if (pair.generator.equals(current.generator)) {
+                current.collect(pair);
+            } else {
+                if (current.power != 0) {
+                    normalized.add(current);
+                }
+                current = pair;
+            }
+        }
+        if (current.power != 0) {
+            normalized.add(current);
+        }
+        return normalized;
+    }
+
+    @Override
+    public String toString() {
+        List<SLPElementPair> normalized = this.normalize();
+        if (normalized.size() == 0) {
+            return "Id";
+        } else {
+            StringBuilder builder = new StringBuilder();
+            for (SLPElementPair pair: normalized) {
+                builder.append(pair.generator);
+                if (pair.power != 1) {
+                    builder.append("^");
+                    builder.append(pair.power);
+                }
+            }
+            return builder.toString();
+        }
+    }
+
 }
