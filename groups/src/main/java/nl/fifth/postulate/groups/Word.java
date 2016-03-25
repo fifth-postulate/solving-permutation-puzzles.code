@@ -85,6 +85,22 @@ public class Word implements GroupElement<Word> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Word word = (Word) o;
+
+        return primitiveWords.equals(word.primitiveWords);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return primitiveWords.hashCode();
+    }
+
+    @Override
     public String toString(){
         if (isIdentity()) {
             return "Id";
