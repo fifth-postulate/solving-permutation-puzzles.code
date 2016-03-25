@@ -31,6 +31,25 @@ public class Word implements GroupElement<Word> {
             if (!this.generator.equals(element.generator)) { throw new IllegalArgumentException("can not merge primitive words on different generators"); }
             return new PrimitiveWord(generator, this.power + element.power);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            PrimitiveWord that = (PrimitiveWord) o;
+
+            if (power != that.power) return false;
+            return generator.equals(that.generator);
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = generator.hashCode();
+            result = 31 * result + power;
+            return result;
+        }
     }
 
     private List<PrimitiveWord> primitiveWords = new ArrayList<PrimitiveWord>();
