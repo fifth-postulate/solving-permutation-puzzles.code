@@ -60,14 +60,19 @@ public class Group<T extends GroupElement<T> & GroupAction> {
     }
 
     public boolean isMember(T candidate) {
+        candidate = strip(candidate);
+        return candidate.isIdentity();
+    }
+
+    public T strip(T candidate) {
         for (BaseStrongGeneratorLevel<T> level: levels) {
             if (level.hasTransversalFor(candidate)) {
                 candidate = candidate.times(level.transversalFor(candidate).inverse());
             } else {
-                return false;
+                break;
             }
         }
-        return candidate.isIdentity();
+        return candidate;
     }
 
     public T randomElement(Random random) {
