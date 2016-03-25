@@ -12,6 +12,10 @@ public class Word implements GroupElement<Word> {
         return new Word(symbol);
     }
 
+    public static Word identity() {
+        return new Word();
+    }
+
     private static class PrimitiveWord {
         public final String generator;
         public final int power;
