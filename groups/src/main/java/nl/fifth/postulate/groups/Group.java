@@ -1,5 +1,7 @@
 package nl.fifth.postulate.groups;
 
+import nl.fifth.postulate.groups.special.PermutationWord;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -8,14 +10,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Group<T extends GroupElement<T> & GroupAction> {
-    public static Group<Permutation> generatedBy(File file) throws IOException {
+    public static Group<PermutationWord> generatedBy(File file) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
-        List<Permutation> generators = new ArrayList<Permutation>();
-        String line;
+        List<PermutationWord> generators = new ArrayList<PermutationWord>();
+        String line; int generatorCount = 0;
         while ((line = reader.readLine()) != null) {
+            String symbol;
+            if (line.contains(":")) {
+                String[] parts = line.split("\\s*:\\s*");
+                symbol = parts[0];
+                line = parts[1];
+            } else {
+                symbol = "g" + generatorCount++;
+            }
             List<String> strings = Arrays.asList(line.split("\\s*,\\s*"));
             List<Integer> images = strings.stream().map(x -> Integer.valueOf(x)).collect(Collectors.toList());
-            Permutation generator = new Permutation(images);
+            PermutationWord generator = new PermutationWord(new Permutation(images), Word.generator(symbol));
             generators.add(generator);
         }
         return new Group(generators);

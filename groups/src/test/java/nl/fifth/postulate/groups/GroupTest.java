@@ -36,12 +36,14 @@ public class GroupTest {
 
     @Test
     public void shouldBeCreatedFromAFile() throws IOException {
-        Group<Permutation> group = Group.generatedBy(new File("src/test/resources/D10.group"));
-        Permutation member = permutation(4, 3, 2, 1, 0);
-        Permutation nonMember = permutation(1, 0, 2, 3, 4);
+        Group<PermutationWord> group = Group.generatedBy(new File("src/test/resources/D10.group"));
+        PermutationWord member = new PermutationWord(permutation(4, 3, 2, 1, 0), Word.identity());
+        PermutationWord nonMember = new PermutationWord(permutation(1, 0, 2, 3, 4), Word.identity());
 
         assertTrue(group.isMember(member));
         assertFalse(group.isMember(nonMember));
+
+        assertThat(group.strip(member).word.inverse(), is(Word.generator("a").times(Word.generator("b"))));
     }
 
     @Test
