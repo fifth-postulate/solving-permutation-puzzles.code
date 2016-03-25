@@ -1,8 +1,6 @@
 package nl.fifth.postulate.groups;
 
 public class Product<U extends GroupElement<U>, V extends GroupElement<V>> implements GroupElement<Product<U, V>> {
-
-
     private final U u;
     private final V v;
 
@@ -24,6 +22,14 @@ public class Product<U extends GroupElement<U>, V extends GroupElement<V>> imple
     @Override
     public Product<U, V> inverse() {
         return new Product(u.inverse(), v.inverse());
+    }
+
+    public U first() {
+        return u;
+    }
+
+    public V second() {
+        return v;
     }
 
     @Override
