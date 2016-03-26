@@ -14,7 +14,7 @@ public class Permutation implements GroupElement<Permutation>, GroupAction {
         this(Arrays.asList(image));
     }
 
-    protected Permutation(List<Integer> image) {
+    public Permutation(List<Integer> image) {
         this.image = image;
     }
 
