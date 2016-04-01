@@ -1,5 +1,7 @@
 package nl.fifth.postulate.groups;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +41,8 @@ public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP
     @Override
     public boolean isIdentity() { return false; }
 
+    public abstract T evaluate();
+
     protected static class Identity<T extends GroupElement<T>> extends SLP<T> {
 
         @Override
@@ -58,6 +62,11 @@ public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP
         @Override
         public boolean isIdentity() {
             return true;
+        }
+
+        @Override
+        public T evaluate() {
+            throw new NotImplementedException(/* How to create an identity element for T */);
         }
     }
 
@@ -80,6 +89,11 @@ public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP
         }
 
         @Override
+        public T evaluate() {
+            return generator;
+        }
+
+        @Override
         public int hashCode() {
             return generator.hashCode();
         }
@@ -97,6 +111,11 @@ public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP
         public Product(SLP<T> left, SLP<T> right) {
             this.left = left;
             this.right = right;
+        }
+
+        @Override
+        public T evaluate() {
+            return left.evaluate().times(right.evaluate());
         }
 
         @Override
@@ -130,6 +149,11 @@ public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP
         @Override
         public boolean isIdentity() {
             return element.isIdentity();
+        }
+
+        @Override
+        public T evaluate() {
+            return element.evaluate().inverse();
         }
 
         @Override
