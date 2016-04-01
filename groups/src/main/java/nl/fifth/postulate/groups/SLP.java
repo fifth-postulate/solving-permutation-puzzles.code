@@ -2,25 +2,22 @@ package nl.fifth.postulate.groups;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
-public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP<T>> {
-    public static <T extends GroupElement<T>> SLP<T> identity() {
+public abstract class SLP implements GroupElement<SLP> {
+    public static SLP identity() {
         return new Identity();
     }
 
-    public static <T extends GroupElement<T>> SLP<T> generator(T symbol) {
-        return new Generator(symbol);
+    public static SLP generator() {
+        return new Generator();
     }
 
-    public static <T extends GroupElement<T>> SLP product(SLP left, SLP right) {
+    public static SLP product(SLP left, SLP right) {
         return new Product(left, right);
     }
 
-    public static <T extends GroupElement<T>> SLP inverse(SLP element) {
+    public static SLP inverse(SLP element) {
         return new Inverse(element);
     }
 
@@ -41,9 +38,19 @@ public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP
     @Override
     public boolean isIdentity() { return false; }
 
-    public abstract T evaluate();
+    public abstract <T extends GroupElement<T>> T evaluateWith(Map<SLP, T> morphism);
 
-    protected static class Identity<T extends GroupElement<T>> extends SLP<T> {
+    protected static class Identity extends SLP {
+
+        @Override
+        public boolean isIdentity() {
+            return true;
+        }
+
+        @Override
+        public<T extends GroupElement<T>> T evaluateWith(Map<SLP, T> morphism) {
+            throw new NotImplementedException(/* How to create an identity element for T */);
+        }
 
         @Override
         public boolean equals(Object o) {
@@ -51,7 +58,26 @@ public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP
             if (o == null || getClass() != o.getClass()) return false;
 
             return true;
+        }
 
+        @Override
+        public int hashCode() {
+            return 31;
+        }
+    }
+
+    protected static class Generator extends SLP {
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            return false;
+        }
+
+        @Override
+        public <T extends GroupElement<T>> T evaluateWith(Map<SLP, T> morphism) {
+            return morphism.get(this);
         }
 
         @Override
@@ -61,61 +87,22 @@ public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP
 
         @Override
         public boolean isIdentity() {
-            return true;
-        }
-
-        @Override
-        public T evaluate() {
-            throw new NotImplementedException(/* How to create an identity element for T */);
-        }
-    }
-
-    protected static class Generator<T extends GroupElement<T>> extends SLP<T> {
-        public final T generator;
-
-        public Generator(T generator) {
-            this.generator = generator;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Generator generator = (Generator) o;
-
-            return generator.equals(generator.generator);
-
-        }
-
-        @Override
-        public T evaluate() {
-            return generator;
-        }
-
-        @Override
-        public int hashCode() {
-            return generator.hashCode();
-        }
-
-        @Override
-        public boolean isIdentity() {
             return false;
         }
     }
 
-    protected static class Product<T extends GroupElement<T>> extends SLP<T> {
-        protected final SLP<T> left;
-        protected final SLP<T> right;
+    protected static class Product extends SLP {
+        protected final SLP left;
+        protected final SLP right;
 
-        public Product(SLP<T> left, SLP<T> right) {
+        public Product(SLP left, SLP right) {
             this.left = left;
             this.right = right;
         }
 
         @Override
-        public T evaluate() {
-            return left.evaluate().times(right.evaluate());
+        public <T extends GroupElement<T>> T evaluateWith(Map<SLP, T> morphism) {
+            return left.evaluateWith(morphism).times(right.evaluateWith(morphism));
         }
 
         @Override
@@ -138,11 +125,11 @@ public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP
         }
     }
 
-    protected static class Inverse<T extends GroupElement<T>> extends SLP<T> {
+    protected static class Inverse extends SLP {
 
-        protected final SLP<T> element;
+        protected final SLP element;
 
-        public Inverse(SLP<T> element) {
+        public Inverse(SLP element) {
             this.element = element;
         }
 
@@ -152,8 +139,8 @@ public abstract class SLP<T extends GroupElement<T>> implements GroupElement<SLP
         }
 
         @Override
-        public T evaluate() {
-            return element.evaluate().inverse();
+        public <T extends GroupElement<T>> T evaluateWith(Map<SLP, T> morphism) {
+            return element.evaluateWith(morphism).inverse();
         }
 
         @Override
