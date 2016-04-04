@@ -21,9 +21,20 @@ public class SLPEvaluationTest<T extends GroupElement<T>> {
         Permutation h = permutation(1, 2, 3, 0, 5, 6, 4);
         SLP slpG = SLP.generator();
         SLP slpH = SLP.generator();
-        Map<SLP, Permutation> morphism = new HashMap<SLP, Permutation>();
-        morphism.put(slpG, g);
-        morphism.put(slpH, h);
+        Map<SLP, Permutation> morphismImage = new HashMap<SLP, Permutation>();
+        morphismImage.put(slpG, g);
+        morphismImage.put(slpH, h);
+        Morphism morphism = new Morphism() {
+            @Override
+            public GroupElement identity() {
+                return g.times(g.inverse());
+            }
+
+            @Override
+            public GroupElement get(SLP element) {
+                return morphismImage.get(element);
+            }
+        };
         return Arrays.asList(
                 new Object[]{ slpG, g, morphism },
                 new Object[]{ SLP.inverse(slpH), h.inverse(), morphism },
@@ -34,9 +45,9 @@ public class SLPEvaluationTest<T extends GroupElement<T>> {
 
     private final SLP slp;
     private final T expected;
-    private final Map<SLP, T> morphism;
+    private final Morphism<T> morphism;
 
-    public SLPEvaluationTest(SLP slp, T expected, Map<SLP, T> morphism) {
+    public SLPEvaluationTest(SLP slp, T expected, Morphism<T> morphism) {
         this.slp = slp;
         this.expected = expected;
         this.morphism = morphism;

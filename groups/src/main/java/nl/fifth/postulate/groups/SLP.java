@@ -1,9 +1,5 @@
 package nl.fifth.postulate.groups;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.Map;
-
 public abstract class SLP implements GroupElement<SLP> {
     public static SLP identity() {
         return new Identity();
@@ -38,7 +34,7 @@ public abstract class SLP implements GroupElement<SLP> {
     @Override
     public boolean isIdentity() { return false; }
 
-    public abstract <T extends GroupElement<T>> T evaluateWith(Map<SLP, T> morphism);
+    public abstract <T extends GroupElement<T>> T evaluateWith(Morphism<T> morphism);
 
     protected static class Identity extends SLP {
 
@@ -48,8 +44,8 @@ public abstract class SLP implements GroupElement<SLP> {
         }
 
         @Override
-        public<T extends GroupElement<T>> T evaluateWith(Map<SLP, T> morphism) {
-            throw new NotImplementedException(/* How to create an identity element for T */);
+        public<T extends GroupElement<T>> T evaluateWith(Morphism<T> morphism) {
+            return morphism.identity();
         }
 
         @Override
@@ -76,7 +72,7 @@ public abstract class SLP implements GroupElement<SLP> {
         }
 
         @Override
-        public <T extends GroupElement<T>> T evaluateWith(Map<SLP, T> morphism) {
+        public <T extends GroupElement<T>> T evaluateWith(Morphism<T> morphism) {
             return morphism.get(this);
         }
 
@@ -101,7 +97,7 @@ public abstract class SLP implements GroupElement<SLP> {
         }
 
         @Override
-        public <T extends GroupElement<T>> T evaluateWith(Map<SLP, T> morphism) {
+        public <T extends GroupElement<T>> T evaluateWith(Morphism<T> morphism) {
             return left.evaluateWith(morphism).times(right.evaluateWith(morphism));
         }
 
@@ -139,7 +135,7 @@ public abstract class SLP implements GroupElement<SLP> {
         }
 
         @Override
-        public <T extends GroupElement<T>> T evaluateWith(Map<SLP, T> morphism) {
+        public <T extends GroupElement<T>> T evaluateWith(Morphism<T> morphism) {
             return element.evaluateWith(morphism).inverse();
         }
 
