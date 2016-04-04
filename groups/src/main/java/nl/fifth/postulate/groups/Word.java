@@ -64,7 +64,7 @@ public class Word implements GroupElement<Word> {
 
     private List<PrimitiveWord> normalize(List<PrimitiveWord> notNormalized) {
         if (notNormalized.size() <= 1) { return notNormalized; }
-        Stack<PrimitiveWord> normalizedStack = new Stack<PrimitiveWord>();
+        Stack<PrimitiveWord> stack = new Stack<PrimitiveWord>();
         PrimitiveWord current = notNormalized.get(0);
         int index = 1;
         while (index < notNormalized.size()) {
@@ -73,11 +73,11 @@ public class Word implements GroupElement<Word> {
                 current = current.merge(primitiveWord);
             } else {
                 if (current.power != 0) {
-                    normalizedStack.push(current);
+                    stack.push(current);
                 } else {
                     /* current.power == 0 */
-                    if (!normalizedStack.isEmpty()) {
-                        current = normalizedStack.pop();
+                    if (!stack.isEmpty()) {
+                        current = stack.pop();
                         continue;
                     }
                 }
@@ -86,10 +86,10 @@ public class Word implements GroupElement<Word> {
             index++;
         }
         if (current.power != 0) {
-            normalizedStack.push(current);
+            stack.push(current);
         }
         List<PrimitiveWord> normalized = new ArrayList<PrimitiveWord>();
-        normalized.addAll(normalizedStack);
+        normalized.addAll(stack);
         return normalized;
     }
 
