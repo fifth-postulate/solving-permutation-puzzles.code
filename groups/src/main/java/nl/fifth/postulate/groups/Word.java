@@ -73,7 +73,7 @@ public class Word implements GroupElement<Word> {
                 current = current.merge(primitiveWord);
             } else {
                 if (current.power != 0) {
-                    normalizedStack.add(current);
+                    normalizedStack.push(current);
                 } else {
                     /* current.power == 0 */
                     if (!normalizedStack.isEmpty()) {
@@ -86,7 +86,7 @@ public class Word implements GroupElement<Word> {
             index++;
         }
         if (current.power != 0) {
-            normalizedStack.add(current);
+            normalizedStack.push(current);
         }
         List<PrimitiveWord> normalized = new ArrayList<PrimitiveWord>();
         normalized.addAll(normalizedStack);
