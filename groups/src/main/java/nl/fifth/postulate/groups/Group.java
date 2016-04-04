@@ -35,10 +35,16 @@ public class Group<T extends GroupElement<T> & GroupAction> {
     public static <T extends GroupElement<T> & GroupAction>Group<T> generatedBy(T... generators) {
         return new Group(Arrays.asList(generators));
     }
-    private List<Integer> bases = new ArrayList<Integer>();
-    private List<BaseStrongGeneratorLevel<T>> levels = new ArrayList<BaseStrongGeneratorLevel<T>>();
+    private final String name;
+    private final List<Integer> bases = new ArrayList<Integer>();
+    private final List<BaseStrongGeneratorLevel<T>> levels = new ArrayList<BaseStrongGeneratorLevel<T>>();
 
     public Group(List<T> generators) {
+        this("Group", generators);
+    }
+
+    public Group(String name, List<T> generators) {
+        this.name = name;
         while (generators.size() > 0) {
             Integer base = findBase(bases, generators);
             bases.add(base);
@@ -92,6 +98,11 @@ public class Group<T extends GroupElement<T> & GroupAction> {
             product = product.times(level.randomElement(random));
         }
         return product;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s{bases=%s}", name, bases);
     }
 }
 

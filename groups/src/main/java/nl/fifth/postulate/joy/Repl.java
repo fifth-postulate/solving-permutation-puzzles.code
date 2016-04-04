@@ -1,10 +1,8 @@
 package nl.fifth.postulate.joy;
 
-import nl.fifth.postulate.groups.Group;
-import nl.fifth.postulate.groups.Permutation;
-import nl.fifth.postulate.groups.Word;
-import nl.fifth.postulate.groups.factories.PermutationWordFactory;
-import nl.fifth.postulate.groups.special.PermutationWord;
+import nl.fifth.postulate.groups.*;
+import nl.fifth.postulate.groups.factories.PermutationSLPFactory;
+import nl.fifth.postulate.groups.special.PermutationSLP;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +11,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class Repl {
     private static final int NO_FILE_ARGUMENT = 1;
@@ -47,14 +44,18 @@ public class Repl {
         }
     }
 
-    private final Group<PermutationWord> group;
+    private final PermutationSLPFactory permutationSLPFactory;
+    private final Group<PermutationSLP> group;
     private final CommandFactory commandFactory;
     private final PrintStream out;
 
     public Repl(File groupFile, InputStream in, PrintStream out) throws IOException {
-        this.group = Group.generatedBy(groupFile, new PermutationWordFactory());
+        out.printf("Creating group ");
+        this.permutationSLPFactory = new PermutationSLPFactory();
+        this.group = Group.generatedBy(groupFile, permutationSLPFactory);
         this.commandFactory = new CommandFactory(new Scanner(in), out);
         this.out = out;
+        out.printf("%s\n", group);
     }
 
 
@@ -63,7 +64,7 @@ public class Repl {
         while (true) {
             out.print("> ");
             Command command = commandFactory.nextCommand();
-            boolean quit = command.executeWith(group);
+            boolean quit = command.executeWith(group, permutationSLPFactory.morphism);
             if (quit) {
                 break;
             }
@@ -78,12 +79,12 @@ interface Command {
      * @param group The {@code Group} to execute on.
      * @returns {@code true} if the command loop needs to stop, {@code false} otherwise
      */
-    boolean executeWith(Group<PermutationWord> group);
+    boolean executeWith(Group<PermutationSLP> group, Morphism<Word> morphism);
 }
 
 class DoNothingCommand implements Command {
     @Override
-    public boolean executeWith(Group<PermutationWord> group) {
+    public boolean executeWith(Group<PermutationSLP> group, Morphism<Word> morphism) {
         /* do nothing */
         return false;
     }
@@ -92,7 +93,7 @@ class DoNothingCommand implements Command {
 class QuitCommand implements Command {
 
     @Override
-    public boolean executeWith(Group<PermutationWord> group) {
+    public boolean executeWith(Group<PermutationSLP> group, Morphism<Word> morphism) {
         /* do nothing */
         return true;
     }
@@ -106,7 +107,7 @@ class SizeCommand implements Command {
     }
 
     @Override
-    public boolean executeWith(Group<PermutationWord> group) {
+    public boolean executeWith(Group<PermutationSLP> group, Morphism<Word> morphism) {
         out.printf("%d\n", group.size());
         return false;
     }
@@ -127,7 +128,7 @@ class MemberCommand implements Command {
     }
 
     @Override
-    public boolean executeWith(Group<PermutationWord> group) {
+    public boolean executeWith(Group<PermutationSLP> group, Morphism<Word> morphism) {
         List<Integer> image = new ArrayList<Integer>();
         while (scanner.hasNextInt()) {
             int element = scanner.nextInt();
@@ -135,9 +136,9 @@ class MemberCommand implements Command {
         }
         scanner.next(/* consumes ; */);
         Permutation permutation = new Permutation(image);
-        PermutationWord permutationWord = new PermutationWord(permutation, Word.identity());
-        boolean isMember = group.isMember(permutationWord);
-        out.printf("%s is%s a member\n", permutation, isMember ? "": " not");
+        PermutationSLP permutationSLP = new PermutationSLP(permutation, SLP.identity());
+        boolean isMember = group.isMember(permutationSLP);
+        out.printf("is%s a member\n", isMember ? "": " not");
         return false;
     }
 }
@@ -157,7 +158,7 @@ class StripCommand implements Command {
     }
 
     @Override
-    public boolean executeWith(Group<PermutationWord> group) {
+    public boolean executeWith(Group<PermutationSLP> group, Morphism<Word> morphism) {
         List<Integer> image = new ArrayList<Integer>();
         while (scanner.hasNextInt()) {
             int element = scanner.nextInt();
@@ -165,10 +166,10 @@ class StripCommand implements Command {
         }
         scanner.next(/* consumes ; */);
         Permutation permutation = new Permutation(image);
-        PermutationWord permutationWord = new PermutationWord(permutation, Word.identity());
-        permutationWord = group.strip(permutationWord);
-        if (permutationWord.permutation.isIdentity()) {
-            out.printf("%s\n", permutationWord.word.inverse());
+        PermutationSLP permutationSLP = new PermutationSLP(permutation, SLP.identity());
+        permutationSLP = group.strip(permutationSLP);
+        if (permutationSLP.permutation.isIdentity()) {
+            out.printf("%s\n", permutationSLP.slp.inverse().evaluateWith(morphism));
         } else {
             out.println("not a member");
         }
