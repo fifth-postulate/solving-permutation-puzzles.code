@@ -3,6 +3,7 @@ package nl.fifth.postulate.joy;
 import nl.fifth.postulate.groups.Group;
 import nl.fifth.postulate.groups.Permutation;
 import nl.fifth.postulate.groups.Word;
+import nl.fifth.postulate.groups.factories.PermutationWordFactory;
 import nl.fifth.postulate.groups.special.PermutationWord;
 
 import java.io.File;
@@ -51,7 +52,7 @@ public class Repl {
     private final PrintStream out;
 
     public Repl(File groupFile, InputStream in, PrintStream out) throws IOException {
-        this.group = Group.generatedBy(groupFile);
+        this.group = Group.generatedBy(groupFile, new PermutationWordFactory());
         this.commandFactory = new CommandFactory(new Scanner(in), out);
         this.out = out;
     }

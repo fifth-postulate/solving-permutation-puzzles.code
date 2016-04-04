@@ -1,5 +1,6 @@
 package nl.fifth.postulate.groups;
 
+import nl.fifth.postulate.groups.factories.PermutationWordFactory;
 import nl.fifth.postulate.groups.special.PermutationWord;
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class GroupTest {
 
     @Test
     public void shouldBeCreatedFromAFile() throws IOException {
-        Group<PermutationWord> group = Group.generatedBy(new File("src/test/resources/D10.group"));
+        Group<PermutationWord> group = Group.generatedBy(new File("src/test/resources/D10.group"), new PermutationWordFactory());
         PermutationWord member = new PermutationWord(permutation(4, 3, 2, 1, 0), Word.identity());
         PermutationWord nonMember = new PermutationWord(permutation(1, 0, 2, 3, 4), Word.identity());
 

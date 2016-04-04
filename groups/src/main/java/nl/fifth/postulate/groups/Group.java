@@ -1,5 +1,6 @@
 package nl.fifth.postulate.groups;
 
+import nl.fifth.postulate.groups.factories.GroupElementFactory;
 import nl.fifth.postulate.groups.special.PermutationWord;
 
 import java.io.BufferedReader;
@@ -10,9 +11,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Group<T extends GroupElement<T> & GroupAction> {
-    public static Group<PermutationWord> generatedBy(File file) throws IOException {
+    public static <T extends GroupElement<T> & GroupAction> Group<T> generatedBy(File file, GroupElementFactory<T> factory) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
-        List<PermutationWord> generators = new ArrayList<PermutationWord>();
+        List<T> generators = new ArrayList<T>();
         String line; int generatorCount = 0;
         while ((line = reader.readLine()) != null) {
             String symbol;
@@ -25,7 +26,7 @@ public class Group<T extends GroupElement<T> & GroupAction> {
             }
             List<String> strings = Arrays.asList(line.split("\\s*,\\s*"));
             List<Integer> images = strings.stream().map(x -> Integer.valueOf(x)).collect(Collectors.toList());
-            PermutationWord generator = new PermutationWord(new Permutation(images), Word.generator(symbol));
+            T generator = factory.create(images, symbol);
             generators.add(generator);
         }
         return new Group(generators);
