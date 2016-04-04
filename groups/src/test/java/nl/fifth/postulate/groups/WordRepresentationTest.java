@@ -18,10 +18,11 @@ public class WordRepresentationTest {
         Word v = Word.generator("v");
 
         Collection<Object[]> data = new ArrayList<>();
-        data.add(new Object[]{ u, "u"});
-        data.add(new Object[]{ u.times(u), "u^2"});
-        data.add(new Object[]{ u.times(v), "uv"});
-        data.add(new Object[]{ u.times(u.inverse()), "Id"});
+        data.add(new Object[]{ u, "u" });
+        data.add(new Object[]{ u.times(u), "u^2" });
+        data.add(new Object[]{ u.times(v), "uv" });
+        data.add(new Object[]{ u.times(u.inverse()), "Id" });
+        data.add(new Object[]{ u.times(v.inverse()).times(v.times(u.inverse())), "Id" });
         return data;
     }
 

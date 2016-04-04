@@ -1,10 +1,6 @@
 package nl.fifth.postulate.groups;
 
-import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Word implements GroupElement<Word> {
@@ -68,22 +64,32 @@ public class Word implements GroupElement<Word> {
 
     private List<PrimitiveWord> normalize(List<PrimitiveWord> notNormalized) {
         if (notNormalized.size() <= 1) { return notNormalized; }
-        List<PrimitiveWord> normalized = new ArrayList<PrimitiveWord>();
+        Stack<PrimitiveWord> normalizedStack = new Stack<PrimitiveWord>();
         PrimitiveWord current = notNormalized.get(0);
-        for (int index = 1; index < notNormalized.size(); index++) {
+        int index = 1;
+        while (index < notNormalized.size()) {
             PrimitiveWord primitiveWord = notNormalized.get(index);
             if (primitiveWord.generator.equals(current.generator)) {
                 current = current.merge(primitiveWord);
             } else {
                 if (current.power != 0) {
-                    normalized.add(current);
+                    normalizedStack.add(current);
+                } else {
+                    /* current.power == 0 */
+                    if (!normalizedStack.isEmpty()) {
+                        current = normalizedStack.pop();
+                        continue;
+                    }
                 }
                 current = primitiveWord;
             }
+            index++;
         }
         if (current.power != 0) {
-            normalized.add(current);
+            normalizedStack.add(current);
         }
+        List<PrimitiveWord> normalized = new ArrayList<PrimitiveWord>();
+        normalized.addAll(normalizedStack);
         return normalized;
     }
 
