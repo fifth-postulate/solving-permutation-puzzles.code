@@ -43,5 +43,14 @@ public class PermutationTest {
 
         assertThat(image, is(1));
     }
+
+    @Test
+    public void shouldFixIntegersOutsideDegree() {
+        Permutation p = new Permutation(1, 0);
+
+        Integer image = p.actOn(100);
+
+        assertThat(image, is(100));
+    }
 }
 

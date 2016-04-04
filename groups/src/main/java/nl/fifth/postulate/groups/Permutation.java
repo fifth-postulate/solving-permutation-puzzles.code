@@ -46,6 +46,7 @@ public class Permutation implements GroupElement<Permutation>, GroupAction {
 
     @Override
     public Integer actOn(Integer element) {
+        if (element >= image.size()) { return element; }
         return image.get(element);
     }
 
